@@ -1,5 +1,8 @@
 from django.conf import settings
 from django.contrib.auth.models import AbstractUser
+from django.contrib.contenttypes.fields import GenericForeignKey
+from django.contrib.contenttypes.fields import GenericRelation
+from django.contrib.contenttypes.models import ContentType
 from django.db import models
 
 
@@ -22,6 +25,17 @@ class User(AbstractUser):
         verbose_name_plural = 'Пользователи'
 
 
+class Like(models.Model):
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        related_name='likes',
+        on_delete=models.CASCADE,
+    )
+    content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
+    object_id = models.PositiveIntegerField()
+    content_object = GenericForeignKey('content_type', 'object_id')
+
+
 class News(models.Model):
     pub_date = models.DateTimeField(
         verbose_name='Дата создания',
@@ -40,40 +54,19 @@ class News(models.Model):
         on_delete=models.CASCADE,
         verbose_name='Автор',
     )
+    likes = GenericRelation(Like)
 
     def __str__(self):
         return self.text
+
+    @property
+    def total_likes(self):
+        return self.likes.count()
 
     class Meta:
         ordering = ['-pub_date']
         verbose_name = 'Новость'
         verbose_name_plural = 'Новости'
-
-
-class Likes(models.Model):
-    news = models.ForeignKey(
-        News,
-        on_delete=models.SET_NULL,
-        null=True,
-        verbose_name='Новость',
-    )
-    liked_by = models.ForeignKey(
-        settings.AUTH_USER_MODEL,
-        on_delete=models.SET_NULL,
-        null=True,
-        verbose_name='Поставил лайк',
-    )
-    like = models.BooleanField(
-        'Like',
-        default=False,
-    )
-
-    def __str__(self):
-        return self.liked_by
-
-    class Meta:
-        verbose_name = 'Лайк'
-        verbose_name_plural = 'Лайки'
 
 
 class Comments(models.Model):

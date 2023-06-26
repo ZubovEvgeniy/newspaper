@@ -1,9 +1,26 @@
 from rest_framework import serializers
 from rest_framework.relations import SlugRelatedField
-from .models import News, Comments
+
+from .models import News, Comments, User
+from . import services
+
+
+class FanSerializer(serializers.ModelSerializer):
+    full_name = serializers.SerializerMethodField()
+
+    class Meta:
+        model = User
+        fields = (
+            'username',
+            'full_name',
+        )
+
+    def get_full_name(self, obj):
+        return obj.get_full_name()
 
 
 class NewsSerializer(serializers.ModelSerializer):
+    is_fan = serializers.SerializerMethodField()
     author = SlugRelatedField(
         slug_field='username',
         read_only=True,
@@ -11,7 +28,21 @@ class NewsSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = News
-        fields = ('__all__')
+        fields = (
+            'id',
+            'author',
+            'is_fan',
+            'pub_date',
+            'name',
+            'text',
+            'total_likes',
+        )
+
+    def get_is_fan(self, obj) -> bool:
+        """Проверяет, лайкнул ли `request.user` твит (`obj`).
+        """
+        user = self.context.get('request').user
+        return services.is_fan(obj, user)
 
 
 class CommentsSerializer(serializers.ModelSerializer):

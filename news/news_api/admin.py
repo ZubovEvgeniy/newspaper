@@ -1,5 +1,6 @@
 from django.contrib import admin
-from .models import News, Comments, User
+
+from .models import News, Comments, User, Like
 
 
 class UserAdmin(admin.ModelAdmin):
@@ -33,6 +34,10 @@ class NewsAdmin(admin.ModelAdmin):
     )
 
 
+class LikeAdmin(admin.ModelAdmin):
+    list_display = ['id']
+
+
 class CommentAdmin(admin.ModelAdmin):
     list_display = (
         'id',
@@ -43,4 +48,5 @@ class CommentAdmin(admin.ModelAdmin):
 
 admin.site.register(User)
 admin.site.register(News)
+admin.site.register(Like)
 admin.site.register(Comments)

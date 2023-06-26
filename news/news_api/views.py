@@ -4,11 +4,12 @@ from rest_framework import viewsets
 from rest_framework.pagination import LimitOffsetPagination
 
 from .models import News, Comments
+from .mixins import LikedMixin
 from .serializers import NewsSerializer, CommentsSerializer
 from .permissions import AuthorOrReadOnly
 
 
-class NewsViewSet(viewsets.ModelViewSet):
+class NewsViewSet(LikedMixin, viewsets.ModelViewSet):
     queryset = News.objects.all()
     serializer_class = NewsSerializer
     permission_classes = (AuthorOrReadOnly, )
