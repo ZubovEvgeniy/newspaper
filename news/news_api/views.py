@@ -5,13 +5,13 @@ from rest_framework.pagination import LimitOffsetPagination
 
 from .models import News, Comments
 from .serializers import NewsSerializer, CommentsSerializer
-from .permissions import IsAuthorAdminOrReadOnly
+from .permissions import AuthorOrReadOnly
 
 
 class NewsViewSet(viewsets.ModelViewSet):
     queryset = News.objects.all()
     serializer_class = NewsSerializer
-    permission_classes = (IsAuthorAdminOrReadOnly, )
+    permission_classes = (AuthorOrReadOnly, )
     pagination_class = LimitOffsetPagination
 
     def perform_create(self, serializer):
@@ -20,7 +20,7 @@ class NewsViewSet(viewsets.ModelViewSet):
 
 class CommentsViewSet(viewsets.ModelViewSet):
     serializer_class = CommentsSerializer
-    permission_classes = (IsAuthorAdminOrReadOnly, )
+    permission_classes = (AuthorOrReadOnly, )
 
     def get_queryset(self):
         news_id = self.kwargs.get('news_id')
