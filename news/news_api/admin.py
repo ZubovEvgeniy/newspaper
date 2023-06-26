@@ -18,5 +18,13 @@ class NewsAdmin(admin.ModelAdmin):
     )
 
 
+class CommentAdmin(admin.ModelAdmin):
+    list_display = (
+        'id',
+        'author',
+        'text',
+    )
+
+
 admin.site.register(News)
 admin.site.register(Comments)
