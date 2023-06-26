@@ -50,6 +50,32 @@ class News(models.Model):
         verbose_name_plural = 'Новости'
 
 
+class Likes(models.Model):
+    news = models.ForeignKey(
+        News,
+        on_delete=models.SET_NULL,
+        null=True,
+        verbose_name='Новость',
+    )
+    liked_by = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.SET_NULL,
+        null=True,
+        verbose_name='Поставил лайк',
+    )
+    like = models.BooleanField(
+        'Like',
+        default=False,
+    )
+
+    def __str__(self):
+        return self.liked_by
+
+    class Meta:
+        verbose_name = 'Лайк'
+        verbose_name_plural = 'Лайки'
+
+
 class Comments(models.Model):
     pub_date = models.DateTimeField(
         'Дата создания',
