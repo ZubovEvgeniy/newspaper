@@ -10,7 +10,7 @@ class News(models.Model):
         auto_now_add=True,
     )
     name = models.CharField(
-        verbose_name='Категория',
+        verbose_name='Заголовок новости',
         max_length=256
     )
     text = models.TextField(
@@ -35,7 +35,7 @@ class News(models.Model):
 class Comments(models.Model):
     pub_date = models.DateTimeField(
         'Дата создания',
-        auto_now_add=True
+        auto_now_add=True,
     )
     news = models.ForeignKey(
         News,
