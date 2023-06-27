@@ -6,13 +6,13 @@ from rest_framework.pagination import LimitOffsetPagination
 from .models import News, Comments
 from .mixins import LikedMixin
 from .serializers import NewsSerializer, CommentsSerializer
-from .permissions import AuthorOrReadOnly
+from .permissions import IsAuthorAdminModerOrReadOnly
 
 
 class NewsViewSet(LikedMixin, viewsets.ModelViewSet):
     queryset = News.objects.all()
     serializer_class = NewsSerializer
-    permission_classes = (AuthorOrReadOnly, )
+    permission_classes = (IsAuthorAdminModerOrReadOnly, )
     pagination_class = LimitOffsetPagination
 
     def perform_create(self, serializer):
@@ -21,7 +21,7 @@ class NewsViewSet(LikedMixin, viewsets.ModelViewSet):
 
 class CommentsViewSet(viewsets.ModelViewSet):
     serializer_class = CommentsSerializer
-    permission_classes = (AuthorOrReadOnly, )
+    permission_classes = (IsAuthorAdminModerOrReadOnly, )
 
     def get_queryset(self):
         news_id = self.kwargs.get('news_id')
