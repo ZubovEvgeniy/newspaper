@@ -6,6 +6,7 @@ from . import services
 
 
 class FanSerializer(serializers.ModelSerializer):
+
     full_name = serializers.SerializerMethodField()
 
     class Meta:
@@ -19,7 +20,21 @@ class FanSerializer(serializers.ModelSerializer):
         return obj.get_full_name()
 
 
+class CommentsSerializer(serializers.ModelSerializer):
+
+    author = serializers.SlugRelatedField(
+        read_only=True,
+        slug_field='username',
+    )
+
+    class Meta:
+        model = Comments
+        fields = ('__all__')
+
+
 class NewsSerializer(serializers.ModelSerializer):
+
+    comments = CommentsSerializer(many=True, source="less_comments")
     is_fan = serializers.SerializerMethodField()
     author = SlugRelatedField(
         slug_field='username',
@@ -36,21 +51,11 @@ class NewsSerializer(serializers.ModelSerializer):
             'name',
             'text',
             'total_likes',
+            'total_comments',
+            'comments',
         )
 
     def get_is_fan(self, obj) -> bool:
-        """Проверяет, лайкнул ли `request.user` твит (`obj`).
-        """
+
         user = self.context.get('request').user
         return services.is_fan(obj, user)
-
-
-class CommentsSerializer(serializers.ModelSerializer):
-    author = serializers.SlugRelatedField(
-        read_only=True,
-        slug_field='username',
-    )
-
-    class Meta:
-        model = Comments
-        fields = ('__all__')

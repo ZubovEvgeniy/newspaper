@@ -15,7 +15,7 @@ class LikedMixin:
         return Response()
 
     @action(detail=True, methods=['POST'])
-    def unlike(self, request, pk=None):
+    def dislike(self, request, pk=None):
         """Удаляет лайк с `obj`.
         """
         obj = self.get_object()

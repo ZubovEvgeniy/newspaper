@@ -5,9 +5,11 @@ from django.contrib.contenttypes.fields import GenericRelation
 from django.contrib.contenttypes.models import ContentType
 from django.db import models
 
+comment_limit = 1
+
 
 class User(AbstractUser):
-    """Модель пользователя."""
+
     username = models.CharField(
         verbose_name='Имя пользователя',
         max_length=150,
@@ -26,6 +28,7 @@ class User(AbstractUser):
 
 
 class Like(models.Model):
+
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         related_name='likes',
@@ -35,8 +38,13 @@ class Like(models.Model):
     object_id = models.PositiveIntegerField()
     content_object = GenericForeignKey('content_type', 'object_id')
 
+    class Meta:
+        verbose_name = 'Лайк'
+        verbose_name_plural = 'Лайки'
+
 
 class News(models.Model):
+
     pub_date = models.DateTimeField(
         verbose_name='Дата создания',
         auto_now_add=True,
@@ -59,9 +67,17 @@ class News(models.Model):
     def __str__(self):
         return self.text
 
+    def less_comments(self):
+        return (Comments.objects.all()
+                .filter(news=self).order_by("-id")[:comment_limit])
+
     @property
     def total_likes(self):
         return self.likes.count()
+
+    @property
+    def total_comments(self):
+        return Comments.objects.all().filter(news=self).count()
 
     class Meta:
         ordering = ['-pub_date']
@@ -70,6 +86,7 @@ class News(models.Model):
 
 
 class Comments(models.Model):
+
     pub_date = models.DateTimeField(
         'Дата создания',
         auto_now_add=True,

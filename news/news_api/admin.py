@@ -35,7 +35,10 @@ class NewsAdmin(admin.ModelAdmin):
 
 
 class LikeAdmin(admin.ModelAdmin):
-    list_display = ['id']
+    list_display = (
+        'id',
+        'user',
+    )
 
 
 class CommentAdmin(admin.ModelAdmin):
@@ -46,7 +49,7 @@ class CommentAdmin(admin.ModelAdmin):
     )
 
 
-admin.site.register(User)
-admin.site.register(News)
-admin.site.register(Like)
-admin.site.register(Comments)
+admin.site.register(User, UserAdmin)
+admin.site.register(News, NewsAdmin)
+admin.site.register(Like, LikeAdmin)
+admin.site.register(Comments, CommentAdmin)
