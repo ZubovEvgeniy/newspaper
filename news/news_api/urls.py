@@ -1,7 +1,7 @@
 from django.urls import include, path
 from rest_framework import routers
 
-from .views import NewsViewSet, CommentsViewSet
+from .views import CommentsViewSet, NewsViewSet
 
 router = routers.DefaultRouter()
 

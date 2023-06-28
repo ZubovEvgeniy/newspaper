@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import News, Comments, User, Like
+from .models import Comments, Like, News, User
 
 
 class UserAdmin(admin.ModelAdmin):
@@ -9,12 +9,12 @@ class UserAdmin(admin.ModelAdmin):
         'username',
         'email',
         'is_staff',
-        )
+    )
     fields = (
         'username',
         'email',
         'is_staff',
-        )
+    )
 
 
 class NewsAdmin(admin.ModelAdmin):

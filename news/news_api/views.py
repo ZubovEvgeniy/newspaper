@@ -1,12 +1,11 @@
 from django.shortcuts import get_object_or_404
-
 from rest_framework import viewsets
 from rest_framework.pagination import LimitOffsetPagination
 
-from .models import News, Comments
 from .mixins import LikedMixin
-from .serializers import NewsSerializer, CommentsSerializer
+from .models import Comments, News
 from .permissions import IsAuthorAdminModerOrReadOnly
+from .serializers import CommentsSerializer, NewsSerializer
 
 
 class NewsViewSet(LikedMixin, viewsets.ModelViewSet):

@@ -1,8 +1,8 @@
 from rest_framework import serializers
 from rest_framework.relations import SlugRelatedField
 
-from .models import News, Comments, User
 from . import services
+from .models import Comments, News, User
 
 
 class FanSerializer(serializers.ModelSerializer):
