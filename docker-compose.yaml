@@ -1,0 +1,70 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:13.0-alpine
+    volumes:
+      - db_data:/var/lib/postgresql/data/
+    environment:
+      POSTGRES_USER: news
+      POSTGRES_PASSWORD: news
+    healthcheck:
+      test: pg_isready -U news
+      interval: 2s
+      timeout: 3s
+      retries: 40
+  web: &web
+    build: .
+    image: news:latest
+    restart: always
+    depends_on:
+      migrator:
+        condition: service_completed_successfully
+    env_file:
+      - ./.env
+    environment:
+      DB_HOST: db
+      DB_PORT: 5432
+      DB_NAME: news
+      DB_PASSWORD: news
+      DB_USER: news
+  nginx:
+    image: nginx:1.21.3-alpine
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
+      - static_volume:/var/html/static/
+      - media_volume:/var/html/media/
+    depends_on:
+      web:
+        condition: service_started
+      collector:
+        condition: service_completed_successfully
+
+  migrator:
+    <<: *web
+    command: 
+      - python
+      - manage.py
+      - migrate 
+    restart: 'no'
+    depends_on:
+      db: 
+        condition: service_healthy
+  collector:
+    <<: *web
+    command:
+      - python
+      - manage.py
+      - collectstatic
+    restart: 'no'
+    volumes:
+      - static_volume:/app/static/
+    depends_on: []
+
+
+volumes:
+  static_volume:
+  media_volume:
+  db_data:
