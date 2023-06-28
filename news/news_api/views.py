@@ -24,8 +24,7 @@ class CommentsViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         news_id = self.kwargs.get('news_id')
-        comments_queryset = Comments.objects.filter(news=news_id)
-        return comments_queryset
+        return Comments.objects.filter(news=news_id)
 
     def perform_create(self, serializer):
         news = get_object_or_404(News, pk=self.kwargs.get('news_id'))
