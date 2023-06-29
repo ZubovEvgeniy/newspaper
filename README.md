@@ -173,10 +173,14 @@ sudo docker-compose exec <newspapers-id> python manage.py createsuperuser
 ```
 
 **Проект будет доступен по вашему IP-адресу.**
+
 **Логин суперпользователя:** superuser
+
 **Пароль:** Qwerty1234!
 
 
 **Автор**
+
 Евгений Зубов
+
 2023
