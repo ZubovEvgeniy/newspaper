@@ -14,7 +14,7 @@ services:
       timeout: 3s
       retries: 40
   web: &web
-    image: evgeniyzubov/news:latest
+    image: evgeniyzubov/newspapers:latest
     restart: always
     depends_on:
       migrator:
