@@ -39,8 +39,8 @@ services:
     depends_on:
       web:
         condition: service_started
-      collector:
-        condition: service_completed_successfully
+      # collector:
+      #   condition: service_completed_successfully
 
   migrator:
     <<: *web
